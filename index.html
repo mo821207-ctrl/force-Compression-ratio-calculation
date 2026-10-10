@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="Force 155 靜態壓縮比與 Squish 計算器，可離線安裝使用。">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Force 155 CR">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-180.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Force 155 壓縮比與 Squish 計算器</title>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="topbar"><p class="eyebrow">ENGINE TOOL · OFFLINE PWA</p><button id="themeBtn" class="theme-btn" type="button" aria-label="切換顯示模式">🌙 深色模式</button></div>
+  <h1>Force 155<br><span>壓縮比與 Squish</span></h1>
+  <p class="intro">計算排氣量、餘隙容積、靜態壓縮比及 Squish 間隙。</p>
+</div></header>
+
+<div id="iosInstallTip" class="ios-tip" hidden><div><strong>安裝到 iPhone 主畫面</strong><span>Safari 分享按鈕 → 加入主畫面</span></div><button id="closeIosTip" type="button" aria-label="關閉提示">×</button></div>
+<main class="wrap grid" id="calculatorView">
+<section class="panel" aria-labelledby="inputTitle">
+  <div class="section-heading"><div><p class="step">01</p><h2 id="inputTitle">輸入引擎數據</h2></div><button id="resetBtn" class="text-btn" type="button">恢復預設值</button></div>
+  <form id="calculator" novalidate><div class="field-grid">
+    <label class="field"><span>缸徑 Bore</span><small>汽缸內徑</small><span class="input-wrap"><input id="bore" type="number" inputmode="decimal" min="1" step="0.01" value="58"><b>mm</b></span></label>
+    <label class="field"><span>行程 Stroke</span><small>曲軸活塞行程</small><span class="input-wrap"><input id="stroke" type="number" inputmode="decimal" min="1" step="0.01" value="58.7"><b>mm</b></span></label>
+    <label class="field"><span>燃燒室容積</span><small>汽缸頭燃燒室實測值</small><span class="input-wrap"><input id="chamber" type="number" inputmode="decimal" min="0" step="0.01" value="16"><b>cc</b></span></label>
+    <label class="field"><span>活塞頂容積</span><small>凹頂填正值，凸頂填負值</small><span class="input-wrap"><input id="piston" type="number" inputmode="decimal" step="0.01" value="0"><b>cc</b></span></label>
+    <label class="field"><span>缸墊厚度</span><small>填入壓縮後實際厚度</small><span class="input-wrap"><input id="gasket" type="number" inputmode="decimal" min="0" step="0.01" value="0.50"><b>mm</b></span></label>
+    <label class="field"><span>活塞突出量</span><small>突出填正值，低於缸面填負值</small><span class="input-wrap"><input id="protrusion" type="number" inputmode="decimal" step="0.01" value="0"><b>mm</b></span></label>
+    <label class="field full"><span>缸頭 Squish 深度</span><small>缸頭接合面至 Squish 平台的深度</small><span class="input-wrap"><input id="squishDepth" type="number" inputmode="decimal" min="0" step="0.01" value="0.80"><b>mm</b></span></label>
+  </div><p id="error" class="error" role="alert" hidden></p><button class="primary" type="submit">重新計算</button></form>
+</section>
+
+<section id="resultView" class="panel result-panel" aria-labelledby="resultTitle" aria-live="polite">
+  <div class="section-heading"><div><p class="step">02</p><h2 id="resultTitle">計算結果</h2></div></div>
+  <div class="headline-result"><p>靜態壓縮比</p><strong id="compressionRatio">--</strong><span> : 1</span></div>
+  <div class="squish-card"><div><p>Squish 間隙</p><strong><span id="squishValue">--</span> mm</strong></div><span id="squishStatus" class="badge">--</span></div>
+  <dl class="results">
+    <div><dt>排氣量</dt><dd><span id="displacement">--</span> cc</dd></div>
+    <div><dt>缸墊容積</dt><dd><span id="gasketVolume">--</span> cc</dd></div>
+    <div><dt>突出量修正</dt><dd><span id="deckVolume">--</span> cc</dd></div>
+    <div><dt>總餘隙容積</dt><dd><span id="clearanceVolume">--</span> cc</dd></div>
+  </dl>
+  <div class="formula"><b>計算公式</b><p>壓縮比 =（排氣量 + 總餘隙容積）÷ 總餘隙容積</p><p>Squish = 缸墊厚度 − 活塞突出量 + 缸頭 Squish 深度</p></div>
+  <p class="warning">本工具為幾何估算。實際組裝應使用焊錫絲等方式量測，並確認活塞、汽門及汽缸頭間隙。</p>
+</section>
+
+<section id="guideView" class="panel guide">
+  <p class="step">03</p><h2>繁體中文使用說明</h2>
+  <div class="guide-grid">
+    <article><h3>數值怎麼填？</h3><ul><li>活塞凹頂增加餘隙，填正值。</li><li>活塞凸頂減少餘隙，填負值。</li><li>活塞突出缸面填正值；低於缸面填負值。</li><li>缸墊請填組裝後的壓縮厚度。</li></ul></article>
+    <article><h3>Squish 是什麼？</h3><p>此處的 Squish 是活塞位於上止點時，活塞頂外圍與汽缸頭 Squish 平台之間的幾何間隙。</p><p>畫面上的狀態僅作提醒，不是引擎安全保證。設定仍須依零件、轉速、熱膨脹與實際量測判斷。</p></article>
+  </div>
+</section>
+</main>
+<nav class="ios-tabbar" aria-label="主要導覽"><button type="button" data-target="calculatorView"><span>⌨️</span>計算</button><button type="button" data-target="resultView"><span>📊</span>結果</button><button type="button" data-target="guideView"><span>ℹ️</span>說明</button></nav>
+<footer class="wrap"><span>Force 155 Compression & Squish Calculator</span><span id="installState">可離線使用</span></footer>
+<script src="./app.js" defer></script>
+</body></html>
